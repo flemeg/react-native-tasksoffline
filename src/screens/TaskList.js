@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, ImageBackground, StyleSheet, FlatList, TouchableOpacity, Platform } from 'react-native'
 
-import commomStyles from '../commonStyles'
+import commonStyles from '../commonStyles'
 import todayImage from '../../assets/imgs/today.jpg'
 
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -16,7 +16,7 @@ import Task from '../components/Task'
 export default class TaskList extends Component {
     state = {
         showDoneTasks: true,
-        showAddTask: true,
+        showAddTask: false,
         visibleTasks: [],
         tasks: [{
             id: Math.random(),
@@ -76,7 +76,7 @@ export default class TaskList extends Component {
                     <View style={styles.iconBar}>
                         <TouchableOpacity onPress={this.toggleFilter}>
                             <Icon name={this.state.showDoneTasks ? 'eye' : 'eye-slash'}
-                                size={20} color={commomStyles.colors.secondary} />
+                                size={20} color={commonStyles.colors.secondary} />
                         </TouchableOpacity>
                     </View>
                     <View style={styles.titleBar}>
@@ -91,7 +91,13 @@ export default class TaskList extends Component {
                             <Task {...item} toggleTask={this.toggleTask} />} />
 
                 </View>
-            </View>
+                <TouchableOpacity style={styles.addButton}
+                    activeOpacity={0.7}
+                    onPress={() => this.setState({ showAddTask: true })}>
+                    <Icon name="plus" size={20}
+                        color={commonStyles.colors.secondary} />
+                </TouchableOpacity>
+            </View >
 
         )
     }
@@ -112,16 +118,16 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
     },
     title: {
-        fontFamily: commomStyles.fontFamily,
+        fontFamily: commonStyles.fontFamily,
         fontSize: 50,
-        color: commomStyles.colors.secondary,
+        color: commonStyles.colors.secondary,
         marginLeft: 20,
         marginBottom: 20,
     },
     subTitle: {
-        fontFamily: commomStyles.fontFamily,
+        fontFamily: commonStyles.fontFamily,
         fontSize: 20,
-        color: commomStyles.colors.secondary,
+        color: commonStyles.colors.secondary,
         marginLeft: 20,
         marginBottom: 20,
     },
@@ -130,5 +136,16 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         justifyContent: 'flex-end',
         marginTop: Platform.OS === 'ios' ? 30 : 10
+    },
+    addButton: {
+        position: 'absolute',
+        right: 30,
+        bottom: 30,
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        backgroundColor: commonStyles.colors.today,
+        justifyContent: 'center',
+        alignItems: 'center',
     }
 })

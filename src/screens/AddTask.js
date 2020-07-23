@@ -1,8 +1,40 @@
 import React, { Component } from 'react'
-import { Modal, Text, View, StyleSheet, TouchableWithoutFeedback } from 'react-native'
+import { Platform, Modal, Text, View, StyleSheet, TouchableWithoutFeedback, TouchableOpacity, TextInput } from 'react-native'
 import commonStyles from '../commonStyles'
+import DateTimePicker from '@react-native-community/datetimepicker'
+import moment from 'moment'
+
+const initialState = { desc: '', date: new Date(), showDatePicker: false }
 
 export default class AddTask extends Component {
+
+    state = {
+        ...initialState
+    }
+
+    getDatePicker = () => {
+        let datePicker = <DateTimePicker
+            value={this.state.date}
+            onChange={(_, date) => this.setState({ date, showDatePicker: false })}
+            mode='date' />
+
+        const dateString = moment(this.state.date).format('ddd, D [de] MMMM')
+
+        if (Platform.OS === 'android') {
+            datePicker = (
+                <View>
+                    <TouchableOpacity onPress={() => this.setState({ showDatePicker: true })}>
+                        <Text style={styles.date}>
+                            {dateString}
+                        </Text>
+                    </TouchableOpacity>
+                    {this.state.showDatePicker && datePicker}
+                </View>
+            )
+        }
+
+        return datePicker
+    }
 
     render() {
         return (
@@ -15,6 +47,20 @@ export default class AddTask extends Component {
                 </TouchableWithoutFeedback>
                 <View style={styles.container}>
                     <Text style={styles.header}>Nova Tarefa</Text>
+                    <TextInput
+                        value={this.state.desc}
+                        onChangeText={desc => this.setState({ desc })}
+                        placeholder="Informe a descrição"
+                        style={styles.input} />
+                    {this.getDatePicker()}
+                    <View style={styles.buttons}>
+                        <TouchableOpacity onPress={this.props.onCancel}>
+                            <Text style={styles.button}>Cancelar</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <Text style={styles.button}> Salvar</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 <TouchableWithoutFeedback
                     onPress={this.props.onCancel}>
@@ -24,7 +70,6 @@ export default class AddTask extends Component {
             </Modal>
         )
     }
-
 }
 const styles = StyleSheet.create({
     background: {
@@ -36,10 +81,37 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFF'
     },
     header: {
+        flex: 1,
         fontFamily: commonStyles.fontFamily,
         backgroundColor: commonStyles.colors.today,
         color: commonStyles.colors.secondary,
         textAlign: 'center',
         padding: 18,
+    },
+    input: {
+        fontFamily: commonStyles.fontFamily,
+        height: 40,
+        marginTop: 10,
+        marginLeft: 10,
+        marginRight: 10,
+        backgroundColor: '#FFF',
+        borderWidth: 1,
+        borderColor: '#e3e3e3',
+        borderRadius: 6,
+
+    },
+    buttons: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+    },
+    button: {
+        margin: 20,
+        marginRight: 30,
+        color: commonStyles.colors.today,
+    },
+    date: {
+        fontFamily: commonStyles.fontFamily,
+        fontSize: 20,
+        margin: 15,
     }
 })
