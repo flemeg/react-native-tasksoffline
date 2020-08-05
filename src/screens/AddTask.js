@@ -1,8 +1,19 @@
 import React, { Component } from 'react'
-import { Platform, Modal, Text, View, StyleSheet, TouchableWithoutFeedback, TouchableOpacity, TextInput } from 'react-native'
-import commonStyles from '../commonStyles'
-import DateTimePicker from '@react-native-community/datetimepicker'
+import {
+    Platform,
+    Modal,
+    View,
+    Text,
+    TouchableOpacity,
+    TextInput,
+    StyleSheet,
+    TouchableWithoutFeedback
+} from 'react-native'
+
 import moment from 'moment'
+import DateTimePicker from '@react-native-community/datetimepicker'
+
+import commonStyles from '../commonStyles'
 
 const initialState = { desc: '', date: new Date(), showDatePicker: false }
 
@@ -15,22 +26,28 @@ export default class AddTask extends Component {
     save = () => {
         const newTask = {
             desc: this.state.desc,
-            date: this.state.date,
+            date: this.state.date
         }
 
         this.props.onSave && this.props.onSave(newTask)
         this.setState({ ...initialState })
-    }    
+    }
 
     getDatePicker = () => {
-        let datePicker = <DateTimePicker
+        let datePicker = (
+          <DateTimePicker
+            mode="date"
             value={this.state.date}
-            onChange={(_, date) => this.setState({ date, showDatePicker: false })}
-            mode='date' />
+            onChange={(_, date) => {
+              date = date ? date : new Date()
+              this.setState({date, showDatePicker: false})
+            }}
+          />
+        )
+        
+        const dateString = moment(this.state.date).format('ddd, D [de] MMMM [de] YYYY')
 
-        const dateString = moment(this.state.date).format('ddd, D [de] MMMM')
-
-        if (Platform.OS === 'android') {
+        if(Platform.OS === 'android') {
             datePicker = (
                 <View>
                     <TouchableOpacity onPress={() => this.setState({ showDatePicker: true })}>
@@ -42,7 +59,7 @@ export default class AddTask extends Component {
                 </View>
             )
         }
-
+        
         return datePicker
     }
 
@@ -57,18 +74,17 @@ export default class AddTask extends Component {
                 </TouchableWithoutFeedback>
                 <View style={styles.container}>
                     <Text style={styles.header}>Nova Tarefa</Text>
-                    <TextInput
-                        value={this.state.desc}
+                    <TextInput style={styles.input} 
+                        placeholder="Informe a Descrição..."
                         onChangeText={desc => this.setState({ desc })}
-                        placeholder="Informe a descrição"
-                        style={styles.input} />
+                        value={this.state.desc} />
                     {this.getDatePicker()}
                     <View style={styles.buttons}>
                         <TouchableOpacity onPress={this.props.onCancel}>
                             <Text style={styles.button}>Cancelar</Text>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={this.save}>
-                            <Text style={styles.button}> Salvar</Text>
+                            <Text style={styles.button}>Salvar</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -76,52 +92,48 @@ export default class AddTask extends Component {
                     onPress={this.props.onCancel}>
                     <View style={styles.background}></View>
                 </TouchableWithoutFeedback>
-
             </Modal>
         )
     }
 }
+
 const styles = StyleSheet.create({
     background: {
         flex: 1,
         backgroundColor: 'rgba(0, 0, 0, 0.7)'
     },
     container: {
-        flex: 1,
         backgroundColor: '#FFF'
     },
     header: {
-        flex: 1,
         fontFamily: commonStyles.fontFamily,
         backgroundColor: commonStyles.colors.today,
         color: commonStyles.colors.secondary,
         textAlign: 'center',
-        padding: 18,
+        padding: 15,
+        fontSize: 18
     },
     input: {
         fontFamily: commonStyles.fontFamily,
         height: 40,
-        marginTop: 10,
-        marginLeft: 10,
-        marginRight: 10,
+        margin: 15,
         backgroundColor: '#FFF',
         borderWidth: 1,
-        borderColor: '#e3e3e3',
-        borderRadius: 6,
-
+        borderColor: '#E3E3E3',
+        borderRadius: 6
     },
     buttons: {
         flexDirection: 'row',
-        justifyContent: 'flex-end',
+        justifyContent: 'flex-end'
     },
     button: {
         margin: 20,
         marginRight: 30,
-        color: commonStyles.colors.today,
+        color: commonStyles.colors.today
     },
     date: {
         fontFamily: commonStyles.fontFamily,
         fontSize: 20,
-        margin: 15,
+        marginLeft: 15
     }
 })

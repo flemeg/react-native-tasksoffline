@@ -16,65 +16,63 @@ import commonStyles from '../commonStyles'
 
 export default props => {
 
-    const doneOrNotStyle = props.doneAt != null ?
+    const doneOrNotStyle = props.doneAt != null ? 
         { textDecorationLine: 'line-through' } : {}
 
-    const date = props.doneAt ? props.dateAt : props.estimateAt
-    const formatedDate = moment(date).locale('pt-br')
+    const date = props.doneAt ? props.doneAt : props.estimateAt
+    const formattedDate = moment(date).locale('pt-br')
         .format('ddd, D [de] MMMM')
 
     const getRightContent = () => {
         return (
             <TouchableOpacity style={styles.right}
                 onPress={() => props.onDelete && props.onDelete(props.id)}>
-                <Icon name='trash' size={30} color='#FFF' />
+                <Icon name="trash" size={30} color='#FFF' />
             </TouchableOpacity>
         )
     }
 
     const getLeftContent = () => {
         return (
-            <TouchableOpacity style={styles.left}
-            >
-                <Icon name='trash' size={20} color='#FFF' />
-                <Text style={styles.excludeText} >Excluir</Text>
-            </TouchableOpacity>
+            <View style={styles.left}>
+                <Icon name="trash" size={20} color='#FFF'
+                    style={styles.excludeIcon} />
+                <Text style={styles.excludeText}>Excluir</Text>
+            </View>
         )
     }
 
     return (
-        <Swipeable
+        <Swipeable 
             renderRightActions={getRightContent}
             renderLeftActions={getLeftContent}
             onSwipeableLeftOpen={() => props.onDelete && props.onDelete(props.id)}>
             <View style={styles.container}>
                 <TouchableWithoutFeedback
-                    onPress={() => props.toggleTask(props.id)}>
-                    <View style={styles.checkContainer} >
+                    onPress={() => props.onToggleTask(props.id)}>
+                    <View style={styles.checkContainer}>
                         {getCheckView(props.doneAt)}
                     </View>
-                </TouchableWithoutFeedback >
+                </TouchableWithoutFeedback>
                 <View>
-                    <Text style={styles.desc, doneOrNotStyle} >{props.desc}</Text>
-                    <Text style={styles.date} >{formatedDate}</Text>
+                    <Text style={[styles.desc, doneOrNotStyle]}>{props.desc}</Text>
+                    <Text style={styles.date}>{formattedDate}</Text>
                 </View>
-            </View >
+            </View>
         </Swipeable>
     )
 }
 
 function getCheckView(doneAt) {
-    if (doneAt != null) {
+    if(doneAt != null) {
         return (
             <View style={styles.done}>
-                <Icon name='check' size={20} color='#FFF' />
+                <Icon name='check' size={20} color='#FFF'></Icon>
             </View>
         )
     } else {
         return (
-            <View style={styles.pedding}>
-
-            </View>
+            <View style={styles.pending}></View>
         )
     }
 }
@@ -89,11 +87,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFF'
     },
     checkContainer: {
-        width: "20%",
+        width: '20%',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center'
     },
-    pedding: {
+    pending: {
         height: 25,
         width: 25,
         borderRadius: 13,
@@ -104,26 +102,26 @@ const styles = StyleSheet.create({
         height: 25,
         width: 25,
         borderRadius: 13,
-        backgroundColor: '#4b7021',
+        backgroundColor: '#4D7031',
         alignItems: 'center',
         justifyContent: 'center'
     },
     desc: {
         fontFamily: commonStyles.fontFamily,
         color: commonStyles.colors.mainText,
-        fontSize: 15,
+        fontSize: 15
     },
     date: {
         fontFamily: commonStyles.fontFamily,
         color: commonStyles.colors.subText,
-        fontSize: 12,
+        fontSize: 12
     },
     right: {
         backgroundColor: 'red',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-end',
-        paddingHorizontal: 20,
+        paddingHorizontal: 20
     },
     left: {
         flex: 1,
