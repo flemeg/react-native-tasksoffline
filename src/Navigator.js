@@ -25,7 +25,7 @@ const menuConfig = {
     }
 }
 
-const menuRoutes = {
+const menuRoutes = {  
     Today: {
         name: 'Today',
         screen: props => <TaskList title='Hoje' daysAhead={0} {...props} />,
